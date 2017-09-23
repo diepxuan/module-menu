@@ -1,6 +1,8 @@
 <?php
-
-namespace Diepxuan\Menu\Plugin\Block\Html;
+/**
+ * Copyright © 2017 Magento, Inc. All rights reserved.
+ */
+namespace Diepxuan\Menu\Helper;
 
 class Topmenu
 {
@@ -27,26 +29,20 @@ class Topmenu
     }
 
     /**
-     * @param  \Magento\Theme\Block\Html\Topmenu $subject
-     * @param  string                            $outermostClass
-     * @param  string                            $childrenWrapClass
-     * @param  integer                           $limit
-     * @return [type]
+     * @param  \Magento\Framework\Data\Tree\Node $menu
+     * @return \Magento\Framework\Data\Tree\Node
      */
-    public function beforeGetHtml(
-        \Magento\Theme\Block\Html\Topmenu $subject,
-                                          $outermostClass = '',
-                                          $childrenWrapClass = '',
-                                          $limit = 0
-    ) {
+    public function general(\Magento\Framework\Data\Tree\Node $menu)
+    {
         $node = $this->_nodeFactory->create(
             [
                 'data'    => $this->getNodeAsArray(),
                 'idField' => 'id',
-                'tree'    => $subject->getMenu()->getTree(),
+                'tree'    => $menu->getTree(),
             ]
         );
-        $subject->getMenu()->addChild($node);
+        $menu->addChild($node);
+        return $menu;
     }
 
     /**

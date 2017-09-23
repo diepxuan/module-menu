@@ -6,26 +6,15 @@ use Magento\Framework\Data\Tree\Node;
 
 class Topmenu implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \Magento\Framework\Data\Tree\NodeFactory
-     */
-    protected $_nodeFactory;
+    protected $_menuHelper;
 
     /**
-     * @var \Magento\Framework\App\Request\Http
-     */
-    protected $_request;
-
-    /**
-     * @param \Magento\Framework\Data\Tree\NodeFactory $nodeFactory
-     * @param \Magento\Framework\App\Request\Http      $request
+     * @param \Diepxuan\Menu\Helper\Topmenu $menuHelper
      */
     public function __construct(
-        \Magento\Framework\Data\Tree\NodeFactory $nodeFactory,
-        \Magento\Framework\App\Request\Http      $request
+        \Diepxuan\Menu\Helper\Topmenu $menuHelper
     ) {
-        $this->_nodeFactory = $nodeFactory;
-        $this->_request     = $request;
+        $this->_menuHelper = $menuHelper;
     }
 
     /**
@@ -35,41 +24,7 @@ class Topmenu implements \Magento\Framework\Event\ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /** @var \Magento\Framework\Data\Tree\Node $menu */
-        $menu = $observer->getMenu();
-        $node = $this->_nodeFactory->create(
-            [
-                'data'    => $this->getNodeAsArray(),
-                'idField' => 'id',
-                'tree'    => $menu->getTree(),
-            ]
-        );
-        $menu->addChild($node);
+        $menu = $this->_menuHelper->general($observer->getMenu());
         return $this;
-    }
-
-    /**
-     * @return Array
-     */
-    protected function getNodeAsArray()
-    {
-        return [
-            'name'       => __('Home'),
-            'id'         => 'home',
-            'url'        => '/',
-            'has_active' => true,
-            'is_active'  => $this->isHomepage(),
-        ];
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function isHomepage()
-    {
-
-        if ($this->_request->getFullActionName() == 'cms_index_index') {
-            return true;
-        }
-        return false;
     }
 }
