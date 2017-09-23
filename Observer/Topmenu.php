@@ -1,8 +1,10 @@
 <?php
 
-namespace Diepxuan\Menu\Plugin\Block\Html;
+namespace Diepxuan\Menu\Observer;
 
-class Topmenu
+use Magento\Framework\Data\Tree\Node;
+
+class Topmenu implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \Magento\Framework\Data\Tree\NodeFactory
@@ -27,26 +29,22 @@ class Topmenu
     }
 
     /**
-     * @param  \Magento\Theme\Block\Html\Topmenu $subject
-     * @param  string                            $outermostClass
-     * @param  string                            $childrenWrapClass
-     * @param  integer                           $limit
-     * @return [type]
+     * @param  \Magento\Framework\Event\Observer $observer
+     * @return $this
      */
-    public function beforeGetHtml(
-        \Magento\Theme\Block\Html\Topmenu $subject,
-                                          $outermostClass = '',
-                                          $childrenWrapClass = '',
-                                          $limit = 0
-    ) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        /** @var \Magento\Framework\Data\Tree\Node $menu */
+        $menu = $observer->getMenu();
         $node = $this->_nodeFactory->create(
             [
                 'data'    => $this->getNodeAsArray(),
                 'idField' => 'id',
-                'tree'    => $subject->getMenu()->getTree(),
+                'tree'    => $menu->getTree(),
             ]
         );
-        $subject->getMenu()->addChild($node);
+        $menu->addChild($node);
+        return $this;
     }
 
     /**
