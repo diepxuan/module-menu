@@ -55,7 +55,7 @@ class Topmenu
             'name'       => __('Home'),
             'id'         => 'home',
             'url'        => '/',
-            'has_active' => true,
+            'has_active' => $this->isHomepage(),
             'is_active'  => $this->isHomepage(),
         ];
     }
